@@ -68,8 +68,8 @@ func main() {
 			break
 		}
 		for {
-			udpAddr, _ := net.ResolveUDPAddr("udp4", content + ":5050")
-			socket, err := net.DialUDP("udp4", nil, udpAddr)
+			udpAddr, _ := net.ResolveUDPAddr("udp", content + ":5050")
+			socket, err := net.DialUDP("udp", nil, udpAddr)
 			if (err != nil) {
 				fmt.Println("connection failed", err)
 				return
@@ -110,7 +110,6 @@ func write(socket *net.UDPConn, ch chan int) {
 	// conn.SetWriteBuffer(1000000)
 	content := make([]byte, sendingByte)
 	for {
-		fmt.Println("sending")
 		<- ticker.C
 		socket.Write(content)
 	}
@@ -128,6 +127,7 @@ func listen() {
 		return
 	}
 	for {
+		fmt.Println("having")
 		var data [1024]byte
 		n, addr, err := listen.ReadFromUDP(data[:])
 		atomic.AddUint64(&totalByte, uint64(n))
