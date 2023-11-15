@@ -4,7 +4,7 @@ import (
 	// "bufio"
 	"fmt"
 	"net"
-	"strconv"
+	// "strconv"
 	"strings"
 	"time"
 	// "sync/atomic"
@@ -128,11 +128,6 @@ func check() {
 			num, _ := conn.Read(buf)
 			content := string(buf)[:num]
 			fmt.Println(content)
-			if (content == strconv.Itoa(int(count - 1))) {
-				break
-			} else {
-				continue
-			}
 		}
 		time.Sleep(time.Second / 2)
 	}
