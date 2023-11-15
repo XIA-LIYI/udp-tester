@@ -27,7 +27,7 @@ func main() {
 	}
 	
 	var tcpAddr *net.TCPAddr
-	tcpAddr, _ = net.ResolveTCPAddr("tcp", "localhost:18787")
+	tcpAddr, _ = net.ResolveTCPAddr("tcp", "192.168.51.112:18787")
 	var conn *net.TCPConn
 	var err error
 	for {
