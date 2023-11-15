@@ -108,12 +108,12 @@ func main() {
 
 func write(socket *net.UDPConn, ch chan int) {
 	<- ch
-	ticker := time.NewTicker(time.Second / 1000)
+	ticker := time.NewTicker(time.Second / 100000)
 	defer ticker.Stop()
 	socket.SetWriteBuffer(bufferSize)
 	content := make([]byte, bufferSize)
 	for {
-		// <- ticker.C
+		<- ticker.C
 		socket.Write(content)
 	}
 	
