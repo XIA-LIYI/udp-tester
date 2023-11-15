@@ -127,7 +127,7 @@ func listen() {
 	for {
 		fmt.Println("having")
 		var data [1024]byte
-		n, addr, err := listen.ReadFromUDP(data[:])
+		n, addr, err := listen.ReadFromUDP(data)
 		atomic.AddUint64(&totalByte, uint64(n))
 		if err != nil {
 			fmt.Printf("read failed, err:%v\n", err)
