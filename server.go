@@ -122,13 +122,11 @@ func listen(conn *net.TCPConn) {
 func check() {
 	for ip, conn := range connectionMap {
 		fmt.Printf("Checking ip:" + ip + " ")
-		for {
-			conn.Write([]byte("check\n"))
-			buf := make([]byte, 100)
-			num, _ := conn.Read(buf)
-			content := string(buf)[:num]
-			fmt.Println(content)
-		}
+		conn.Write([]byte("check\n"))
+		buf := make([]byte, 100)
+		num, _ := conn.Read(buf)
+		content := string(buf)[:num]
+		fmt.Println(content)
 		time.Sleep(time.Second / 2)
 	}
 
