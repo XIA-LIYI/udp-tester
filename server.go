@@ -49,10 +49,10 @@ func main() {
 	broadcast()
 	
 	fmt.Println("check for check, start for start, stop for stop")
-	start()
-	fmt.Println("starting")
-	time.Sleep(time.Second * 20)
-	getResult()
+	// start()
+	// fmt.Println("starting")
+	// time.Sleep(time.Second * 20)
+	// getResult()
 	<- canClose
 	// for {
 	// 	var msg string
