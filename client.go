@@ -118,10 +118,8 @@ func write(socket *net.UDPConn, ch chan int) {
 
 func listen() {
 	fmt.Println("Listening")
-	listen, err := net.ListenUDP("udp", &net.UDPAddr{
-		IP: net.IPv4(0, 0, 0, 0),
-		Port: 5050,
-	})
+	udpAddr, _ := net.ResolveUDPAddr("udp", "0.0.0.0:5050")
+	listen, err := net.ListenUDP("udp", udpAddr)
 	if err != nil {
 		fmt.Printf("Listen failed, err:%v\n", err)
 		return
