@@ -11,16 +11,17 @@ import (
 
 )
 
+const numOfMachines = 2
 var count int32 = 0
 var totalByte uint64 = 0
-var chans = [2]chan int{}
+var chans = [numOfMachines]chan int{}
 
-var bytes [2]uint64
+var bytes [numOfMachines]uint64
 
-var sendingByte int = 1250000000 / 25
+var sendingByte int = 1250000000 / numOfMachines
 
 func main() {
-	for i := 0; i < 24; i++ {
+	for i := 0; i < numOfMachines; i++ {
 		chans[i] = make(chan int)
 	}
 	
