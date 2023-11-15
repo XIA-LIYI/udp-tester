@@ -18,7 +18,8 @@ var chans = [numOfMachines]chan int{}
 
 var bytes [numOfMachines]uint64
 
-var sendingByte int = 1250000000 / numOfMachines
+var sendingByte int = 10000000000 / 8 / numOfMachines
+var bufferSize = 1500
 
 func main() {
 	for i := 0; i < numOfMachines; i++ {
@@ -26,7 +27,7 @@ func main() {
 	}
 	
 	var tcpAddr *net.TCPAddr
-	tcpAddr, _ = net.ResolveTCPAddr("tcp", "192.168.51.112:18787")
+	tcpAddr, _ = net.ResolveTCPAddr("tcp", "localhost:18787")
 	var conn *net.TCPConn
 	var err error
 	for {
@@ -107,10 +108,10 @@ func write(socket *net.UDPConn, ch chan int) {
 	<- ch
 	ticker := time.NewTicker(time.Second / 1000)
 	defer ticker.Stop()
-	// conn.SetWriteBuffer(1000000)
-	content := make([]byte, sendingByte)
+	socket.SetWriteBuffer(bufferSize)
+	content := make([]byte, bufferSize)
 	for {
-		<- ticker.C
+		// <- ticker.C
 		socket.Write(content)
 	}
 	
@@ -126,14 +127,14 @@ func listen() {
 	}
 	for {
 		fmt.Println("having")
-		var data [1024]byte
+		data := make([]byte, bufferSize)
 		n, addr, err := listen.ReadFromUDP(data)
 		atomic.AddUint64(&totalByte, uint64(n))
 		if err != nil {
 			fmt.Printf("read failed, err:%v\n", err)
 			continue
 		}
-		fmt.Printf("data:%s addr:%v count:%d\n", string(data[0:count]), addr, n)
+		fmt.Printf("data:%s addr:%v count:%d\n", string(data[0:n]), addr, n)
 	}
 }
 
