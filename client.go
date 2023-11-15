@@ -11,16 +11,15 @@ import (
 
 )
 
-const numOfMachines = 2
+const numOfMachines = 1
 var count int32 = 0
 var totalByte uint64 = 0
+var bufferSize int = 9000
+
 var chans = [numOfMachines]chan int{}
 
 var bytes [numOfMachines]uint64
 var ips = make(map[string]int)
-
-var sendingByte int = 10000000000 / 8 / numOfMachines
-var bufferSize = 1500
 
 func main() {
 	for i := 0; i < numOfMachines; i++ {
@@ -28,7 +27,7 @@ func main() {
 	}
 	
 	var tcpAddr *net.TCPAddr
-	tcpAddr, _ = net.ResolveTCPAddr("tcp", "192.168.51.112:18787")
+	tcpAddr, _ = net.ResolveTCPAddr("tcp", "localhost:18787")
 	var conn *net.TCPConn
 	var err error
 	for {
@@ -108,13 +107,17 @@ func main() {
 
 func write(socket *net.UDPConn, ch chan int) {
 	<- ch
-	ticker := time.NewTicker(time.Second / 10000000)
+	ticker := time.NewTicker(time.Second / 100)
 	defer ticker.Stop()
 	socket.SetWriteBuffer(bufferSize)
 	content := make([]byte, bufferSize)
+	speed := int(1.25 * 1000 * 1000 * 1000 / 100 / numOfMachines / bufferSize) + 1
 	for {
 		<- ticker.C
-		socket.Write(content)
+		for i := 0; i < speed; i++ {
+			socket.Write(content)
+		}
+		
 	}
 	
 }
@@ -134,7 +137,7 @@ func listen() {
 		return
 	}
 	for {
-		data := make([]byte, bufferSize)
+		data := make([]byte, bufferSize + 1)
 		n, addr, err := listen.ReadFromUDP(data)
 		atomic.AddUint64(&totalByte, uint64(n))
 		bytes[addrToIndex(addr.String())] += uint64(n)
@@ -146,32 +149,4 @@ func listen() {
 }
 
 
-func onReceive(conn *net.TCPConn, index int32) {
-	// fmt.Println("start receiving")
-	// conn.SetReadBuffer(128000)
-	buf := make([]byte, 156250)
-	for {
-		num, _ := conn.Read(buf)
-		atomic.AddUint64(&totalByte, uint64(num))
-		bytes[index] += uint64(num)
-	}
-
-}
-
-func onSend(conn *net.TCPConn, ch chan int) {
-	// fmt.Println("start sending")
-	<- ch
-	ticker := time.NewTicker(time.Second / 1000)
-	defer ticker.Stop()
-	// conn.SetWriteBuffer(1000000)
-	content := make([]byte, sendingByte)
-
-	// fmt.Println("start sending")
-	for {
-		// <- ticker.C
-		conn.Write(content)
-	}
-
-
-}
 
