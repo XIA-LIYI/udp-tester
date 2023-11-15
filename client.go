@@ -103,14 +103,15 @@ func main() {
 	// }
 }
 
-func write(socket *net.UDPConn,ch chan int) {
+func write(socket *net.UDPConn, ch chan int) {
 	<- ch
 	ticker := time.NewTicker(time.Second / 1000)
 	defer ticker.Stop()
 	// conn.SetWriteBuffer(1000000)
 	content := make([]byte, sendingByte)
 	for {
-		// <- ticker.C
+		fmt.Println("sending")
+		<- ticker.C
 		socket.Write(content)
 	}
 	
