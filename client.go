@@ -134,7 +134,6 @@ func listen() {
 		return
 	}
 	for {
-		fmt.Println("having")
 		data := make([]byte, bufferSize)
 		n, addr, err := listen.ReadFromUDP(data)
 		atomic.AddUint64(&totalByte, uint64(n))
