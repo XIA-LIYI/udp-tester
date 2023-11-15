@@ -79,10 +79,7 @@ func monitorInput() {
 		var msg string
 		fmt.Scanln(&msg)
 		if msg == "check" {
-			for _, conn := range connectionMap {
-				go listen(conn)
-				conn.Write([]byte("check\n"))
-			}
+			check()
 		}
 		if msg == "start" {
 			start()
