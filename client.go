@@ -17,6 +17,7 @@ var totalByte uint64 = 0
 var chans = [numOfMachines]chan int{}
 
 var bytes [numOfMachines]uint64
+var ips = make(map[string]int)
 
 var sendingByte int = 10000000000 / 8 / numOfMachines
 var bufferSize = 1500
@@ -75,6 +76,7 @@ func main() {
 				fmt.Println("connection failed", err)
 				return
 			}
+			ips[content] = int(count) 
 			go write(socket, chans[count])
 			atomic.AddInt32(&count, 1)
 			break
@@ -117,6 +119,12 @@ func write(socket *net.UDPConn, ch chan int) {
 	
 }
 
+func addrToIndex(addr string) int {
+	ip := strings.Split(addr, ":")[0]
+	index := ips[ip]
+	return index
+}
+
 func listen() {
 	fmt.Println("Listening")
 	udpAddr, _ := net.ResolveUDPAddr("udp", "0.0.0.0:5050")
@@ -130,11 +138,11 @@ func listen() {
 		data := make([]byte, bufferSize)
 		n, addr, err := listen.ReadFromUDP(data)
 		atomic.AddUint64(&totalByte, uint64(n))
+		bytes[addrToIndex(addr.String())] += uint64(n)
 		if err != nil {
 			fmt.Printf("read failed, err:%v\n", err)
 			continue
 		}
-		fmt.Printf("data:%s addr:%v count:%d\n", string(data[0:n]), addr, n)
 	}
 }
 
