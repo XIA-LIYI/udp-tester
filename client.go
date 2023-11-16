@@ -139,7 +139,7 @@ func addrToIndex(addr string) int {
 
 func listen(port int) {
 	fmt.Println("Listening")
-	udpAddr, _ := net.ResolveUDPAddr("udp", "0.0.0.0:" + strconv.Itoa(5600))
+	udpAddr, _ := net.ResolveUDPAddr("udp", "0.0.0.0:" + strconv.Itoa(port))
 	listen, err := net.ListenUDP("udp", udpAddr)
 	if err != nil {
 		fmt.Printf("Listen failed, err:%v\n", err)
