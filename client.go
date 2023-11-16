@@ -111,19 +111,19 @@ func main() {
 
 func write(socket *net.UDPConn, ch chan int) {
 	<- ch
-	speed := int(1.25 * 1000 * 1000 * 1000 / 10000 / numOfMachines / bufferSize) + 1
+	// speed := int(1.25 * 1000 * 1000 * 1000 / 10000 / numOfMachines / bufferSize) + 1
 	ticker := time.NewTicker(time.Second / 10000)
 	defer ticker.Stop()
 	socket.SetWriteBuffer(bufferSize * 10)
 	content := make([]byte, bufferSize)
 	for {
 		<- ticker.C
-		for i := 0; i < speed; i++ {
-			socket.Write(content)
-			atomic.AddUint64(&sendBytes, uint64(bufferSize))
-		}
-		// socket.Write(content)
-		// sendBytes += uint64(bufferSize)
+		// for i := 0; i < speed; i++ {
+		// 	socket.Write(content)
+		// 	atomic.AddUint64(&sendBytes, uint64(bufferSize))
+		// }
+		socket.Write(content)
+		atomic.AddUint64(&sendBytes, uint64(bufferSize))
 	}
 	
 }
