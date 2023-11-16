@@ -71,7 +71,7 @@ func main() {
 			break
 		}
 		for {
-			udpAddr, _ := net.ResolveUDPAddr("udp", content + ":5050")
+			udpAddr, _ := net.ResolveUDPAddr("udp", content + ":5682")
 			socket, err := net.DialUDP("udp", nil, udpAddr)
 			if (err != nil) {
 				fmt.Println("connection failed", err)
@@ -136,7 +136,7 @@ func addrToIndex(addr string) int {
 
 func listen() {
 	fmt.Println("Listening")
-	udpAddr, _ := net.ResolveUDPAddr("udp", "0.0.0.0:5050")
+	udpAddr, _ := net.ResolveUDPAddr("udp", "0.0.0.0:5682")
 	listen, err := net.ListenUDP("udp", udpAddr)
 	if err != nil {
 		fmt.Printf("Listen failed, err:%v\n", err)
