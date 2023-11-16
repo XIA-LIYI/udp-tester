@@ -21,7 +21,7 @@ var chans = [numOfMachines]chan int{}
 
 var bytes [numOfMachines]uint64
 
-var ips = make(map[string]int)
+var ips = make(map[string]int, numOfMachines)
 
 func main() {
 	for i := 0; i < numOfMachines; i++ {
