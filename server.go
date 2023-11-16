@@ -116,6 +116,7 @@ func getResult() {
 			break
 		}
 	}
+	computePackLost()
 }
 
 func computePackLost() {
