@@ -89,7 +89,7 @@ func main() {
 	fmt.Println("Receive speed is:", totalSpeed, "Mbps")
 	sendSpeed := sendBytes / 1000 / elapsedTime * 8 / 1000
 	fmt.Println("Send speed is:", sendSpeed, "Mbps")
-	result := strconv.Itoa(int(sendSpeed)) + strconv.Itoa(int(totalSpeed)) + ""
+	result := strconv.Itoa(int(sendSpeed)) + " " + strconv.Itoa(int(totalSpeed)) + ""
 	for _, i := range bytes {
 		speed := i / 1000 / elapsedTime * 8 / 1000
 		fmt.Println("Single speed is:", speed, "Mbps")
@@ -120,7 +120,7 @@ func write(socket *net.UDPConn, ch chan int) {
 		<- ticker.C
 		for i := 0; i < speed; i++ {
 			socket.Write(content)
-			sendBytes += uint64(bufferSize)
+			atomic.AddUint64(&sendBytes, uint64(bufferSize))
 		}
 		// socket.Write(content)
 		// sendBytes += uint64(bufferSize)
