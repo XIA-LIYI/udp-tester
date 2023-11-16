@@ -47,6 +47,9 @@ func main() {
 	fmt.Println("connected!")
 
 	go listen()
+	go listen()
+	go listen()
+	go listen()
 
 	startTime := time.Now()
 
