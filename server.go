@@ -47,6 +47,7 @@ func main() {
 	}
 
 	broadcast()
+	time.Sleep(time.Second * 5)
 	
 	fmt.Println("check for check, start for start, stop for stop")
 	start()
