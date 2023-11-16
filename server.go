@@ -131,6 +131,7 @@ func computePackLost() {
 			send, _ := strconv.Atoi(parsedData[i][j])
 			receive, _ := strconv.Atoi(parsedData[j][i + numOfMachines])
 			totalLost += float64(send - receive) / float64(send)
+			fmt.Println(float64(send - receive) / float64(send))
 		}
 	}
 	totalLost = totalLost / float64(numOfMachines) / float64(numOfMachines)
