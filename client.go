@@ -16,7 +16,7 @@ const numOfThreads = 2
 var count int32 = 0
 var totalByte uint64 = 0
 var sendBytes uint64 = 0
-var bufferSize int = 9000
+var bufferSize int = 50000
 
 var chans = [numOfMachines * numOfThreads]chan int{}
 
