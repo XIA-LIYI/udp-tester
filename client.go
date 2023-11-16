@@ -89,7 +89,7 @@ func main() {
 	fmt.Println("Receive speed is:", totalSpeed, "Mbps")
 	sendSpeed := sendBytes / 1000 / elapsedTime * 8 / 1000
 	fmt.Println("Send speed is:", sendSpeed, "Mbps")
-	result := strconv.Itoa(int(sendSpeed)) + " " + strconv.Itoa(int(totalSpeed)) + ""
+	result := strconv.Itoa(int(sendSpeed)) + " " + strconv.Itoa(int(totalSpeed)) + " "
 	for _, i := range bytes {
 		speed := i / 1000 / elapsedTime * 8 / 1000
 		fmt.Println("Single speed is:", speed, "Mbps")
@@ -145,9 +145,9 @@ func listen() {
 	listen.SetReadBuffer(1024 * 32)
 	data := make([]byte, bufferSize + 1)
 	for {
-		n, _, _ := listen.ReadFromUDP(data)
+		n, addr, _ := listen.ReadFromUDP(data)
 		atomic.AddUint64(&totalByte, uint64(n))
-		// bytes[addrToIndex(addr.String())] += uint64(n)		
+		bytes[addrToIndex(addr.String())] += uint64(n)		
 		// if err != nil {
 		// 	fmt.Printf("read failed, err:%v\n", err)
 		// 	continue
