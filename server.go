@@ -124,7 +124,7 @@ func computePackLost() {
 	for i, line := range data {
 		parsedData[i] = strings.Split(line, " ")[2:]
 	}
-	fmt.Println(parsedData)
+
 	var totalLost float64 = 0
 	for i := 0; i < numOfMachines; i++ {
 		for j := 0; j < numOfMachines; j++ {
