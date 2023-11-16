@@ -71,12 +71,12 @@ func main() {
 }
 
 func broadcast() {
-	
 	for _, key := range ips {
 		curr := 0 
 		for _, conn := range connections {
 			conn.Write([]byte(key + ":" + strconv.Itoa(curr + startPort) + "\n") )
 			curr += 1
+
 		} 
 	}
 }

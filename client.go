@@ -151,7 +151,7 @@ func listen(port int, index int) {
 		return
 	}
 	listen.SetReadBuffer(bufferSize * 32)
-	data := make([]byte, bufferSize + 1)
+	data := make([]byte, bufferSize)
 	for {
 		n, _, _ := listen.ReadFromUDP(data)
 		atomic.AddUint64(&totalByte, uint64(n))
