@@ -117,7 +117,7 @@ func write(socket *net.UDPConn, ch chan int) {
 	socket.SetWriteBuffer(bufferSize * 10)
 	content := make([]byte, bufferSize)
 	for {
-		<- ticker.C
+		// <- ticker.C
 		// for i := 0; i < speed; i++ {
 		// 	socket.Write(content)
 		// 	atomic.AddUint64(&sendBytes, uint64(bufferSize))
