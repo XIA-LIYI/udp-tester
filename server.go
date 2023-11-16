@@ -133,7 +133,7 @@ func computePackLost() {
 			totalLost += float64(send - receive) / float64(send)
 		}
 	}
-	totalLost = totalLost / numOfMachines / numOfMachines
+	totalLost = totalLost / float64(numOfMachines) / float64(numOfMachines)
 	fmt.Println("Package lost is", totalLost)
 }
 
