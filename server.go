@@ -104,7 +104,7 @@ func getResult() {
 		fmt.Printf(ips[i] + ": ")
 		for {
 			conn.Write([]byte("stop\n"))
-			buf := make([]byte, 100)
+			buf := make([]byte, 150)
 			num, err := conn.Read(buf)
 			if (err != nil) {
 				continue
