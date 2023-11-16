@@ -18,7 +18,7 @@ var allReady bool = false
 var numOfNodesReady int32 = 0
 var canClose chan int = make(chan int)
 var startPort = 5600
-
+var data [numOfMachines]string
 
 func main() {
 	go monitorInput()
@@ -110,11 +110,29 @@ func getResult() {
 				continue
 			}
 			content := string(buf)[:num]
+			data[i] = content
 			fmt.Printf(content)
 			fmt.Printf("\n")
 			break
 		}
 	}
+}
+
+func computePackLost() {
+	parsedData := make([][]string, numOfMachines)
+	for i, line := range data {
+		parsedData[i] = strings.Split(line, " ")[3:]
+	}
+	var totalLost float64 = 0
+	for i := 0; i < numOfMachines; i++ {
+		for j := 0; j < numOfMachines; j++ {
+			send, _ := strconv.Atoi(parsedData[i][j])
+			receive, _ := strconv.Atoi(parsedData[j][i + numOfMachines])
+			totalLost += float64(send - receive) / float64(send)
+		}
+	}
+	totalLost = totalLost / numOfMachines / numOfMachines
+	fmt.Println("Package lost is", totalLost)
 }
 
 func listen(conn *net.TCPConn) {
