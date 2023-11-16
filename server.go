@@ -10,19 +10,20 @@ import (
 	// "sync/atomic"
 	// "time"
 )
-
-var connectionMap map[string]*net.TCPConn
+const numOfMachines = 8
+var connections [numOfMachines]*net.TCPConn
+var ips [numOfMachines]string
 var count int = 0
 var allReady bool = false
 var numOfNodesReady int32 = 0
 var canClose chan int = make(chan int)
 var startPort = 5600
-var numOfMachines = 8
+
 
 func main() {
 	go monitorInput()
 	var tcpAddr *net.TCPAddr
-	connectionMap = make(map[string]*net.TCPConn)
+
 	tcpAddr, _ = net.ResolveTCPAddr("tcp", "192.168.51.112:18787")
 
 	tcpListener, err := net.ListenTCP("tcp", tcpAddr)
@@ -36,12 +37,12 @@ func main() {
 		if err != nil {
 			continue
 		}
+		connections[count] = tcpConn
+		ips[count] = strings.Split(tcpConn.RemoteAddr().String(), ":")[0]
+		// check()
 		count += 1
 		fmt.Println("A client connected:" + tcpConn.RemoteAddr().String())
 		fmt.Println("Total number of connections:", count)
-		
-		connectionMap[strings.Split(tcpConn.RemoteAddr().String(), ":")[0]] = tcpConn
-		// check()
 		if (count == numOfMachines) {
 			tcpListener.Close()
 			break
@@ -71,9 +72,9 @@ func main() {
 
 func broadcast() {
 	
-	for key, _ := range connectionMap {
+	for _, key := range ips {
 		curr := 0 
-		for _, conn := range connectionMap {
+		for _, conn := range connections {
 			conn.Write([]byte(key + ":" + strconv.Itoa(curr + startPort) + "\n") )
 			curr += 1
 		} 
@@ -99,8 +100,8 @@ func monitorInput() {
 }
 
 func getResult() {
-	for ip, conn := range connectionMap {
-		fmt.Printf(ip + ": ")
+	for i, conn := range connections {
+		fmt.Printf(ips[i] + ": ")
 		for {
 			conn.Write([]byte("stop\n"))
 			buf := make([]byte, 100)
@@ -126,8 +127,8 @@ func listen(conn *net.TCPConn) {
 }
 
 func check() {
-	for ip, conn := range connectionMap {
-		fmt.Printf("Checking ip:" + ip + " ")
+	for i, conn := range connections {
+		fmt.Printf("Checking ip:" + ips[i] + " ")
 		conn.Write([]byte("check\n"))
 		buf := make([]byte, 100)
 		num, _ := conn.Read(buf)
@@ -139,7 +140,7 @@ func check() {
 }
 
 func start() {
-	for _, conn := range connectionMap {
+	for _, conn := range connections {
 		conn.Write([]byte("start\n"))
 	}
 
