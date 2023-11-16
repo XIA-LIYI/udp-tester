@@ -17,11 +17,11 @@ var totalByte uint64 = 0
 var sendBytes uint64 = 0
 var bufferSize int = 1024
 
-var chans = [numOfMachines]chan int{}
+var chans = [numOfMachines * 2]chan int{}
 
 var bytes [numOfMachines]uint64
 
-var ips = make(map[string]int, numOfMachines)
+var ips = make(map[string]int, numOfMachines * 2)
 
 func main() {
 	for i := 0; i < numOfMachines; i++ {
@@ -79,6 +79,8 @@ func main() {
 			}
 			ips[content] = int(count) 
 			go write(socket, chans[count])
+			socket, err = net.DialUDP("udp", nil, udpAddr)
+			go write(socket, chans[count + numOfMachines])
 			atomic.AddInt32(&count, 1)
 			break
 		}
