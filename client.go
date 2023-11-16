@@ -12,7 +12,7 @@ import (
 )
 
 const numOfMachines = 1
-const numOfThreads = 8
+const numOfThreads = 10
 var count int32 = 0
 var totalByte uint64 = 0
 var sendBytes uint64 = 0
@@ -46,9 +46,6 @@ func main() {
 	defer conn.Close()
 	fmt.Println("connected!")
 
-	go listen()
-	go listen()
-	go listen()
 	go listen()
 
 	startTime := time.Now()
