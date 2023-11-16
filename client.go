@@ -17,11 +17,11 @@ var totalByte uint64 = 0
 var sendBytes uint64 = 0
 var bufferSize int = 1024
 
-var chans = [numOfMachines * 2]chan int{}
+var chans = [numOfMachines * 4]chan int{}
 
 var bytes [numOfMachines]uint64
 
-var ips = make(map[string]int, numOfMachines * 2)
+var ips = make(map[string]int, numOfMachines * 4)
 
 func main() {
 	for i := 0; i < numOfMachines * 2; i++ {
