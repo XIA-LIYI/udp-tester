@@ -46,8 +46,10 @@ func main() {
 	defer conn.Close()
 	fmt.Println("connected!")
 
-	go listen()
-	go listen()
+	for i := 0; i < numOfMachines; i++ {
+		go listen(5600 + i)
+	}
+	
 
 	startTime := time.Now()
 
@@ -73,7 +75,7 @@ func main() {
 			break
 		}
 		for {
-			udpAddr, _ := net.ResolveUDPAddr("udp", content + ":5682")
+			udpAddr, _ := net.ResolveUDPAddr("udp", content)
 			for i := 0; i < numOfThreads; i++ {
 				socket, _ := net.DialUDP("udp", nil, udpAddr)
 				go write(socket, chans[count + numOfMachines * int32(i)])
@@ -135,9 +137,9 @@ func addrToIndex(addr string) int {
 	return index
 }
 
-func listen() {
+func listen(port int) {
 	fmt.Println("Listening")
-	udpAddr, _ := net.ResolveUDPAddr("udp", "0.0.0.0:5682")
+	udpAddr, _ := net.ResolveUDPAddr("udp", "0.0.0.0:" + strconv.Itoa(5600))
 	listen, err := net.ListenUDP("udp", udpAddr)
 	if err != nil {
 		fmt.Printf("Listen failed, err:%v\n", err)

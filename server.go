@@ -4,7 +4,7 @@ import (
 	// "bufio"
 	"fmt"
 	"net"
-	// "strconv"
+	"strconv"
 	"strings"
 	"time"
 	// "sync/atomic"
@@ -72,9 +72,10 @@ func main() {
 func broadcast() {
 	
 	for key, _ := range connectionMap {
-		// curr := 0 + ":" + strconv.Itoa(curr)
+		curr := 0 
 		for _, conn := range connectionMap {
-			conn.Write([]byte(key + "\n") )
+			conn.Write([]byte(key + ":" + strconv.Itoa(curr + startPort) + "\n") )
+			curr += 1
 		} 
 	}
 }
