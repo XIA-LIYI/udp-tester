@@ -16,6 +16,7 @@ var count int = 0
 var allReady bool = false
 var numOfNodesReady int32 = 0
 var canClose chan int = make(chan int)
+var startPort = 5600
 
 func main() {
 	go monitorInput()
@@ -68,7 +69,9 @@ func main() {
 }
 
 func broadcast() {
+	
 	for key, _ := range connectionMap {
+		// curr := 0 + ":" + strconv.Itoa(curr)
 		for _, conn := range connectionMap {
 			conn.Write([]byte(key + "\n") )
 		} 
