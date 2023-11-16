@@ -21,7 +21,7 @@ func main() {
 	go monitorInput()
 	var tcpAddr *net.TCPAddr
 	connectionMap = make(map[string]*net.TCPConn)
-	tcpAddr, _ = net.ResolveTCPAddr("tcp", "localhost:18787")
+	tcpAddr, _ = net.ResolveTCPAddr("tcp", "192.168.51.112:18787")
 
 	tcpListener, err := net.ListenTCP("tcp", tcpAddr)
 	if (err != nil) {
@@ -40,7 +40,7 @@ func main() {
 		
 		connectionMap[strings.Split(tcpConn.RemoteAddr().String(), ":")[0]] = tcpConn
 		// check()
-		if (count == 1) {
+		if (count == 2) {
 			tcpListener.Close()
 			break
 		}

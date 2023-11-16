@@ -11,14 +11,16 @@ import (
 
 )
 
-const numOfMachines = 1
+const numOfMachines = 2
 var count int32 = 0
 var totalByte uint64 = 0
-var bufferSize int = 9000
+var sendBytes uint64 = 0
+var bufferSize int = 1024
 
 var chans = [numOfMachines]chan int{}
 
 var bytes [numOfMachines]uint64
+
 var ips = make(map[string]int)
 
 func main() {
@@ -27,7 +29,7 @@ func main() {
 	}
 	
 	var tcpAddr *net.TCPAddr
-	tcpAddr, _ = net.ResolveTCPAddr("tcp", "localhost:18787")
+	tcpAddr, _ = net.ResolveTCPAddr("tcp", "192.168.51.112:18787")
 	var conn *net.TCPConn
 	var err error
 	for {
@@ -84,8 +86,10 @@ func main() {
 	elapsedTime := uint64(time.Since(startTime) / time.Millisecond / 1000)
 	fmt.Println("Time consumed:", elapsedTime, "s")
 	totalSpeed := totalByte / 1000 / elapsedTime * 8 / 1000
-	fmt.Println("Speed is:", totalSpeed, "Mbps")
-	result := ""
+	fmt.Println("Receive speed is:", totalSpeed, "Mbps")
+	sendSpeed := sendBytes / 1000 / elapsedTime * 8 / 1000
+	fmt.Println("Send speed is:", sendSpeed, "Mbps")
+	result := strconv.Itoa(int(totalSpeed)) + ""
 	for _, i := range bytes {
 		speed := i / 1000 / elapsedTime * 8 / 1000
 		fmt.Println("Single speed is:", speed, "Mbps")
@@ -107,17 +111,19 @@ func main() {
 
 func write(socket *net.UDPConn, ch chan int) {
 	<- ch
-	ticker := time.NewTicker(time.Second / 100)
+	speed := int(1.25 * 1000 * 1000 * 1000 / 10000 / numOfMachines / bufferSize) + 1
+	ticker := time.NewTicker(time.Second / 10000)
 	defer ticker.Stop()
-	socket.SetWriteBuffer(bufferSize)
+	socket.SetWriteBuffer(bufferSize * 10)
 	content := make([]byte, bufferSize)
-	speed := int(1.25 * 1000 * 1000 * 1000 / 100 / numOfMachines / bufferSize) + 1
 	for {
 		<- ticker.C
 		for i := 0; i < speed; i++ {
 			socket.Write(content)
+			sendBytes += uint64(bufferSize)
 		}
-		
+		// socket.Write(content)
+		// sendBytes += uint64(bufferSize)
 	}
 	
 }
@@ -136,15 +142,16 @@ func listen() {
 		fmt.Printf("Listen failed, err:%v\n", err)
 		return
 	}
+	listen.SetReadBuffer(1024 * 32)
+	data := make([]byte, bufferSize + 1)
 	for {
-		data := make([]byte, bufferSize + 1)
-		n, addr, err := listen.ReadFromUDP(data)
+		n, _, _ := listen.ReadFromUDP(data)
 		atomic.AddUint64(&totalByte, uint64(n))
-		bytes[addrToIndex(addr.String())] += uint64(n)
-		if err != nil {
-			fmt.Printf("read failed, err:%v\n", err)
-			continue
-		}
+		// bytes[addrToIndex(addr.String())] += uint64(n)		
+		// if err != nil {
+		// 	fmt.Printf("read failed, err:%v\n", err)
+		// 	continue
+		// }
 	}
 }
 
