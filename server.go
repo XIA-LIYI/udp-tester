@@ -17,6 +17,7 @@ var allReady bool = false
 var numOfNodesReady int32 = 0
 var canClose chan int = make(chan int)
 var startPort = 5600
+var numOfMachines = 8
 
 func main() {
 	go monitorInput()
@@ -41,7 +42,7 @@ func main() {
 		
 		connectionMap[strings.Split(tcpConn.RemoteAddr().String(), ":")[0]] = tcpConn
 		// check()
-		if (count == 1) {
+		if (count == numOfMachines) {
 			tcpListener.Close()
 			break
 		}
