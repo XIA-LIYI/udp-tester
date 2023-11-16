@@ -24,12 +24,12 @@ var bytes [numOfMachines]uint64
 var ips = make(map[string]int, numOfMachines * 2)
 
 func main() {
-	for i := 0; i < numOfMachines; i++ {
+	for i := 0; i < numOfMachines * 2; i++ {
 		chans[i] = make(chan int)
 	}
 	
 	var tcpAddr *net.TCPAddr
-	tcpAddr, _ = net.ResolveTCPAddr("tcp", "192.168.51.112:18787")
+	tcpAddr, _ = net.ResolveTCPAddr("tcp", "localhost:18787")
 	var conn *net.TCPConn
 	var err error
 	for {
