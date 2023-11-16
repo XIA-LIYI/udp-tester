@@ -82,6 +82,10 @@ func main() {
 			go write(socket, chans[count])
 			socket, err = net.DialUDP("udp", nil, udpAddr)
 			go write(socket, chans[count + numOfMachines])
+			socket, err = net.DialUDP("udp", nil, udpAddr)
+			go write(socket, chans[count + numOfMachines * 2])
+			socket, err = net.DialUDP("udp", nil, udpAddr)
+			go write(socket, chans[count + numOfMachines * 3])
 			atomic.AddInt32(&count, 1)
 			break
 		}
