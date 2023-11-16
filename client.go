@@ -12,7 +12,7 @@ import (
 )
 
 const numOfMachines = 1
-const numOfThreads = 4
+const numOfThreads = 8
 var count int32 = 0
 var totalByte uint64 = 0
 var sendBytes uint64 = 0
@@ -73,19 +73,10 @@ func main() {
 		}
 		for {
 			udpAddr, _ := net.ResolveUDPAddr("udp", content + ":5682")
-			socket, err := net.DialUDP("udp", nil, udpAddr)
-			if (err != nil) {
-				fmt.Println("connection failed", err)
-				return
+			for i := 0; i < numOfThreads; i++ {
+				socket, _ := net.DialUDP("udp", nil, udpAddr)
+				go write(socket, chans[count + numOfMachines * int32(i)])
 			}
-			ips[content] = int(count) 
-			go write(socket, chans[count])
-			socket, err = net.DialUDP("udp", nil, udpAddr)
-			go write(socket, chans[count + numOfMachines])
-			socket, err = net.DialUDP("udp", nil, udpAddr)
-			go write(socket, chans[count + numOfMachines * 2])
-			socket, err = net.DialUDP("udp", nil, udpAddr)
-			go write(socket, chans[count + numOfMachines * 3])
 			atomic.AddInt32(&count, 1)
 			break
 		}
