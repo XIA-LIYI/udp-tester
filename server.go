@@ -10,7 +10,7 @@ import (
 	// "sync/atomic"
 	// "time"
 )
-const numOfMachines = 4
+const numOfMachines = 8
 var connections [numOfMachines]*net.TCPConn
 var ips [numOfMachines]string
 var count int = 0
