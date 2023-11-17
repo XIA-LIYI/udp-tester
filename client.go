@@ -17,7 +17,7 @@ const numOfThreads = 1
 var count int32 = 0
 var totalByte uint64 = 0
 var sendBytes uint64 = 0
-var bufferSize int = 9000
+var bufferSize int = 1500
 
 var chans = [numOfMachines * numOfThreads]chan int{}
 
@@ -119,7 +119,7 @@ func main() {
 
 func write(socket *net.UDPConn, ch chan int, index int) {
 	<- ch
-	speed := int(1.2 * 1000 * 1000 * 1000 / 1000 / numOfMachines / bufferSize / numOfThreads)
+	speed := int(1.2 * 1000 * 100 * 1000 / 1000 / numOfMachines / bufferSize / numOfThreads)
 	ticker := time.NewTicker(time.Second / 1000)
 	defer ticker.Stop()
 	socket.SetWriteBuffer(bufferSize * 10)
