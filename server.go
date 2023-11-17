@@ -122,9 +122,9 @@ func getResult() {
 func computePackLost() {
 	parsedData := make([][]string, numOfMachines)
 	for i, line := range data {
+		fmt.Println(strings.Split(line, " "))
 		parsedData[i] = strings.Split(line, " ")[2:]
 	}
-
 	var totalLost float64 = 0
 	for i := 0; i < numOfMachines; i++ {
 		for j := 0; j < numOfMachines; j++ {
