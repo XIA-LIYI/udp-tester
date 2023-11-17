@@ -10,7 +10,7 @@ import (
 	// "sync/atomic"
 	// "time"
 )
-const numOfMachines = 2
+const numOfMachines = 4
 var connections [numOfMachines]*net.TCPConn
 var ips [numOfMachines]string
 var count int = 0
@@ -55,7 +55,7 @@ func main() {
 	fmt.Println("check for check, start for start, stop for stop")
 	start()
 	fmt.Println("starting")
-	time.Sleep(time.Second * 20)
+	time.Sleep(time.Second * 30)
 	getResult()
 	<- canClose
 	// for {

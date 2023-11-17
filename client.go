@@ -11,7 +11,7 @@ import (
 
 )
 
-const numOfMachines = 2
+const numOfMachines = 4
 const numOfThreads = 1
 var count int32 = 0
 var totalByte uint64 = 0
