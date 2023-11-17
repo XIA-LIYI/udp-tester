@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"bufio"
 	"strings"
+	"unsafe"
 
 
 )
@@ -17,7 +18,7 @@ const numOfThreads = 1
 var count int32 = 0
 var totalByte uint64 = 0
 var sendBytes uint64 = 0
-var bufferSize int = 9000
+var bufferSize int = 1500
 
 var chans = [numOfMachines * numOfThreads]chan int{}
 
@@ -124,10 +125,17 @@ func write(socket *net.UDPConn, ch chan int, index int) {
 	defer ticker.Stop()
 	socket.SetWriteBuffer(bufferSize * 10)
 	content := make([]byte, bufferSize)
+	j := 0
 	for {
 		<- ticker.C
 		for i := 0; i < speed; i++ {
 			socket.Write(content)
+			if (j == 0) {
+				content[0] = 1
+			} else {
+				content[0] = 0
+			}
+
 			atomic.AddUint64(&sendBytes, uint64(bufferSize))
 			atomic.AddUint64(&sendPacks[index], 1)
 		}
@@ -153,16 +161,43 @@ func listen(port int, index int) {
 	}
 	listen.SetReadBuffer(bufferSize * 64)
 	data := make([]byte, bufferSize + 10)
+	oddPacks := 0
+	evenPacks := 0
 	for {
 		n, _, _ := listen.ReadFromUDP(data)
+		if (data[0] == 0) {
+			evenPacks += 1
+		} else {
+			oddPacks += 1
+		}
 		atomic.AddUint64(&totalByte, uint64(n))
 		receivePacks[index] += 1
+		
 		// bytes[addrToIndex(addr.String())] += uint64(n)		
 		// if err != nil {
 		// 	fmt.Printf("read failed, err:%v\n", err)
 		// 	continue
 		// }
 	}
+}
+
+func ByteArrayToInt(arr []byte) int64{
+    val := int64(0)
+    size := len(arr)
+    for i := 0 ; i < size ; i++ {
+        *(*uint8)(unsafe.Pointer(uintptr(unsafe.Pointer(&val)) + uintptr(i))) = arr[i]
+    }
+    return val
+}
+
+func IntToByteArray(num int64) []byte {
+    size := int(unsafe.Sizeof(num))
+    arr := make([]byte, size)
+    for i := 0 ; i < size ; i++ {
+        byt := *(*uint8)(unsafe.Pointer(uintptr(unsafe.Pointer(&num)) + uintptr(i)))
+        arr[i] = byt
+    }
+    return arr
 }
 
 
