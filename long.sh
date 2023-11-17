@@ -1,6 +1,6 @@
 #!/bin/sh
 #SBATCH --time=20
-#SBATCH --partition=standard
+#SBATCH --partition=long
 #SBATCH --nodes=4
 #SBATCH --ntasks=4 --cpus-per-task=10
 #SBATCH --ntasks-per-node=1
