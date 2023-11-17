@@ -151,7 +151,7 @@ func listen(port int, index int) {
 		fmt.Printf("Listen failed, err:%v\n", err)
 		return
 	}
-	listen.SetReadBuffer(bufferSize * 32)
+	listen.SetReadBuffer(bufferSize * 64)
 	data := make([]byte, bufferSize + 10)
 	for {
 		n, _, _ := listen.ReadFromUDP(data)
