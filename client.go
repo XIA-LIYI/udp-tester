@@ -9,6 +9,7 @@ import (
 	"bufio"
 	"strings"
 
+
 )
 
 const numOfMachines = 8
@@ -118,7 +119,7 @@ func main() {
 
 func write(socket *net.UDPConn, ch chan int, index int) {
 	<- ch
-	speed := int(1.25 * 0.95 * 1000 * 1000 * 1000 / 1000 / numOfMachines / bufferSize / numOfThreads) + 1
+	speed := int(float64(1.2 * 1000 * 1000 * 1000 / 1000 / numOfMachines / bufferSize / numOfThreads))
 	ticker := time.NewTicker(time.Second / 1000)
 	defer ticker.Stop()
 	socket.SetWriteBuffer(bufferSize * 10)
