@@ -118,7 +118,7 @@ func main() {
 
 func write(socket *net.UDPConn, ch chan int, index int) {
 	<- ch
-	speed := int(1.25 * 1000 * 1000 * 1000 / 1000 / numOfMachines / bufferSize / numOfThreads) + 1
+	speed := int(1.25 * 0.95 * 1000 * 1000 * 1000 / 1000 / numOfMachines / bufferSize / numOfThreads) + 1
 	ticker := time.NewTicker(time.Second / 1000)
 	defer ticker.Stop()
 	socket.SetWriteBuffer(bufferSize * 10)
